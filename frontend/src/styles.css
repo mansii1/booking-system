@@ -1,0 +1,151 @@
+:root {
+  font-family: Segoe UI, system-ui, sans-serif;
+  color: #1a1a1a;
+  background: #f4f1ea;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+}
+
+h2 {
+  margin: 28px 0 8px;
+  font-size: 1.05rem;
+}
+
+.sub,
+.hint,
+.empty {
+  color: #555;
+  line-height: 1.45;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 24px 0 8px;
+}
+
+@media (min-width: 640px) {
+  .controls {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+select,
+input[type="date"] {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.dot.open {
+  background: #fff;
+  border: 1px solid #2f6f4e;
+}
+
+.dot.taken {
+  background: #ddd;
+  border: 1px solid #999;
+}
+
+.banner {
+  padding: 10px 12px;
+  border-radius: 6px;
+}
+
+.banner.ok {
+  background: #e8f4ea;
+  border: 1px solid #b7d8bc;
+}
+
+.banner.err {
+  background: #fdecea;
+  border: 1px solid #e2b6b3;
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #c5c5c5;
+  background: #fff;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.slot.open:hover {
+  border-color: #2f6f4e;
+}
+
+.slot.taken {
+  background: #eee;
+  color: #777;
+}
+
+.tag {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.mine ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #333;
+  line-height: 1.6;
+}
