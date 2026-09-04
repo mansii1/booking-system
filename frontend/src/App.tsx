@@ -11,7 +11,7 @@ type Room = { id: number; name: string; iana_timezone: string };
 type Slot = { startUtc: string; endUtc: string; taken: boolean };
 
 export default function App() {
-  const [viewerZone, setViewerZone] = useState("Asia/Kolkata");
+  const [viewerZone, setViewerZone] = useState("Europe/London");
   const [rooms, setRooms] = useState<Room[]>([]);
   const [resourceId, setResourceId] = useState<number | null>(null);
   const [date, setDate] = useState(today);
@@ -52,7 +52,7 @@ export default function App() {
       });
     } catch (err: any) {
       if (err.response?.status === 409) {
-        setToast({ kind: "err", text: "That slot is already booked." });
+        setToast({ kind: "err", text: "That slot is already booked" });
       } else {
         setToast({
           kind: "err",
@@ -116,7 +116,7 @@ export default function App() {
 
       {room && (
         <p className="hint">
-          {room.name} uses <strong>{room.iana_timezone}</strong>. You are viewing times in{" "}
+          {room?.name} uses <strong>{room?.iana_timezone}</strong>. You are viewing times in{" "}
           <strong>{viewerZone}</strong>.
         </p>
       )}
@@ -138,7 +138,8 @@ export default function App() {
               className={slot.taken ? "slot taken" : "slot open"}
               onClick={() => book(slot)}
             >
-              <span>{formatRange(slot.startUtc, slot.endUtc, viewerZone)}</span>
+               {formatRange(slot.startUtc, slot.endUtc, viewerZone)} 
+             {/* {room?.iana_timezone} */}
               <span className="tag">{slot.taken ? "Taken" : "Open"}</span>
             </button>
           ))}

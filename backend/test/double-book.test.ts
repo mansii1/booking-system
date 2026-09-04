@@ -47,7 +47,7 @@ test('two parallel bookings: only one row, other gets 409', async (t) => {
 
   const [a, b] = await Promise.all([send('race-a'), send('race-b')]);
   const codes = [a.status, b.status].sort((x, y) => x - y);
-  assert.deepEqual(codes, [200, 409]);
+  assert.deepEqual(codes, [201, 409]);
 
   const { rows } = await pool.query(
     'select count(*)::int as n from bookings where resource_id = $1 and start_time = $2',

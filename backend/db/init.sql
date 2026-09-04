@@ -60,3 +60,10 @@ INSERT INTO weekly_availability (resource_id, weekday, start_time, end_time) VAL
   (3, 4, '10:00', '18:00'),
   (3, 5, '10:00', '18:00'),
   (3, 6, '10:00', '18:00');
+
+
+-- UPDATE weekly_availability
+-- SET end_time = '16:00'
+-- WHERE resource_id = 1 AND weekday = 6;
+
+-- DELETE FROM weekly_availability WHERE resource_id = 1;
