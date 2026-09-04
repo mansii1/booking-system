@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { DateTime } from "luxon";
 import { TIMEZONES } from "./mockData";
 import { formatRange } from "./slots";
 
-const API = "http://localhost:3001";
+const api = axios.create({ baseURL: "http://localhost:3001" });
 const today = DateTime.now().toISODate() ?? "";
 
 type Room = { id: number; name: string; iana_timezone: string };
@@ -20,49 +21,48 @@ export default function App() {
   const room = rooms.find((r) => r.id === resourceId);
 
   useEffect(() => {
-    fetch(`${API}/resources`)
-      .then((r) => r.json())
-      .then((data) => {
-        setRooms(data);
-        if (data[0]) setResourceId(data[0].id);
+    api
+      .get("/resources")
+      .then((res) => {
+        setRooms(res.data);
+        if (res.data[0]) setResourceId(res.data[0].id);
       })
       .catch(() => setToast({ kind: "err", text: "Could not load rooms. Is the API running?" }));
   }, []);
 
   useEffect(() => {
     if (!resourceId || !date) return;
-    fetch(`${API}/resources/${resourceId}/slots?date=${date}`)
-      .then((r) => r.json())
-      .then(setSlots)
+    api
+      .get(`/resources/${resourceId}/slots`, { params: { date } })
+      .then((res) => setSlots(res.data))
       .catch(() => setToast({ kind: "err", text: "Could not load slots." }));
   }, [resourceId, date]);
 
   async function book(slot: Slot) {
-    const res = await fetch(`${API}/bookings`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    try {
+      await api.post("/bookings", {
         resourceId,
         userId: "mansi",
         startUtc: slot.startUtc,
         endUtc: slot.endUtc,
-      }),
-    });
-
-    if (res.status === 409) {
-      setToast({ kind: "err", text: "That slot is already booked." });
-    } else if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      setToast({ kind: "err", text: err.message || "Booking failed." });
-    } else {
+      });
       setToast({
         kind: "ok",
         text: `Booked ${formatRange(slot.startUtc, slot.endUtc, viewerZone)} (${viewerZone}).`,
       });
+    } catch (err: any) {
+      if (err.response?.status === 409) {
+        setToast({ kind: "err", text: "That slot is already booked." });
+      } else {
+        setToast({
+          kind: "err",
+          text: err.response?.data?.message || "Booking failed.",
+        });
+      }
     }
 
-    const fresh = await fetch(`${API}/resources/${resourceId}/slots?date=${date}`);
-    setSlots(await fresh.json());
+    const fresh = await api.get(`/resources/${resourceId}/slots`, { params: { date } });
+    setSlots(fresh.data);
   }
 
   return (
@@ -120,11 +120,6 @@ export default function App() {
           <strong>{viewerZone}</strong>.
         </p>
       )}
-
-      <p className="legend">
-        <span className="dot open" /> Open
-        <span className="dot taken" /> Taken
-      </p>
 
       {toast && (
         <p className={toast.kind === "ok" ? "banner ok" : "banner err"} role="status">
